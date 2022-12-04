@@ -12,8 +12,8 @@ public abstract class Codelist {
     protected Codelist() {
     }
 
-    protected Codelist(int codelist, int code) {
-        this.id = new CodelistId(codelist, code);
+    protected Codelist(int list, int code) {
+        this.id = new CodelistId(list, code);
     }
 
     public CodelistId getId() {

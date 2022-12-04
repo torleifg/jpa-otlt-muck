@@ -5,27 +5,26 @@ import com.github.torleifg.discriminator.codelist.LiteratureType;
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 @Entity
 public class Expression {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @ManyToMany
-    private final Set<LiteratureType> literatureTypes = new HashSet<>();
+    private final Set<LiteratureType> literatureType = new HashSet<>();
 
-    public Set<LiteratureType> getLiteratureTypes() {
-        return new HashSet<>(this.literatureTypes);
+    public Set<LiteratureType> getLiteratureType() {
+        return new HashSet<>(this.literatureType);
     }
 
     public void addLiteratureType(LiteratureType literatureType) {
-        this.literatureTypes.add(literatureType);
+        this.literatureType.add(literatureType);
     }
 
     public void removeLiteratureType(LiteratureType literatureType) {
-        this.literatureTypes.removeIf(type -> type.getId().equals(literatureType.getId()));
+        this.literatureType.removeIf(type -> type.getId().equals(literatureType.getId()));
     }
 }

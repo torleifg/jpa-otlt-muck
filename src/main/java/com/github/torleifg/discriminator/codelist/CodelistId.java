@@ -8,11 +8,11 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
-@DiscriminatorColumn(discriminatorType = DiscriminatorType.INTEGER, name = "codelist")
+@DiscriminatorColumn(discriminatorType = DiscriminatorType.INTEGER, name = "list")
 public class CodelistId implements Serializable {
 
     @Column
-    private int codelist;
+    private int list;
 
     @Column
     private int code;
@@ -20,24 +20,24 @@ public class CodelistId implements Serializable {
     protected CodelistId() {
     }
 
-    public CodelistId(int codelist, int code) {
-        this.codelist = codelist;
+    public CodelistId(int list, int code) {
+        this.list = list;
         this.code = code;
     }
 
-    public int getCodelist() {
-        return codelist;
+    public int getList() {
+        return list;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof CodelistId that)) return false;
-        return codelist == that.codelist && code == that.code;
+        return list == that.list && code == that.code;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(codelist, code);
+        return Objects.hash(list, code);
     }
 }

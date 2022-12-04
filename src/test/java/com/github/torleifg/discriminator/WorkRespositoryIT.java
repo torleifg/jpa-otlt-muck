@@ -3,8 +3,8 @@ package com.github.torleifg.discriminator;
 import com.github.torleifg.discriminator.codelist.CodelistRepository;
 import com.github.torleifg.discriminator.codelist.IntellectualLevel;
 import com.github.torleifg.discriminator.codelist.LiteratureType;
+import com.github.torleifg.discriminator.work.Work;
 import com.github.torleifg.discriminator.work.WorkRepostitory;
-import com.github.torleifg.discriminator.work.WorkService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +15,8 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
-class WorkServiceIT extends AbstractIntegrationTest {
-
-    @Autowired
-    private WorkService service;
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+class WorkRespositoryIT extends AbstractIntegrationTest {
 
     @Autowired
     private WorkRepostitory workRepostitory;
@@ -37,17 +34,24 @@ class WorkServiceIT extends AbstractIntegrationTest {
     void givenValidCodesWhenCreateWorkThenWorkIsSaved() {
         codelistRepository.saveAll(Set.of(LiteratureType.of(1), IntellectualLevel.of(1)));
 
-        final var work = service.createWork(Set.of(1), Set.of(1));
+        var work = new Work();
+        work.addIntellectualLevel(IntellectualLevel.of(1));
+        work.addLiteratureType(LiteratureType.of(1));
 
-        assertEquals(1, work.getLiteratureTypes().size());
-        assertEquals(1, work.getIntellectualLevels().size());
+        work = workRepostitory.save(work);
+        assertEquals(1, work.getLiteratureType().size());
+        assertEquals(1, work.getIntellectualLevel().size());
     }
 
     @Test
     void givenInvalidCodeWhenCreateWorkThenExceptionIsThrown() {
         codelistRepository.saveAll(Set.of(LiteratureType.of(1), IntellectualLevel.of(1)));
 
+        var work = new Work();
+        work.addIntellectualLevel(IntellectualLevel.of(1));
+        work.addLiteratureType(LiteratureType.of(2));
+
         assertThrows(DataIntegrityViolationException.class, () ->
-                service.createWork(Set.of(1), Set.of(2)));
+                workRepostitory.save(work));
     }
 }

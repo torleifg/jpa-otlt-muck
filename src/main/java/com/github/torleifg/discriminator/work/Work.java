@@ -10,40 +10,40 @@ import java.util.*;
 public class Work {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @ManyToMany
-    private final Set<LiteratureType> literatureTypes = new HashSet<>();
+    private final Set<LiteratureType> literatureType = new HashSet<>();
 
     @ManyToMany
-    private final Set<IntellectualLevel> intellectualLevels = new HashSet<>();
+    private final Set<IntellectualLevel> intellectualLevel = new HashSet<>();
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
-    public Set<LiteratureType> getLiteratureTypes() {
-        return new HashSet<>(this.literatureTypes);
+    public Set<LiteratureType> getLiteratureType() {
+        return new HashSet<>(this.literatureType);
     }
 
     public void addLiteratureType(LiteratureType literatureType) {
-        this.literatureTypes.add(literatureType);
+        this.literatureType.add(literatureType);
     }
 
     public void removeLiteratureType(LiteratureType literatureType) {
-        this.literatureTypes.removeIf(type -> type.getId().equals(literatureType.getId()));
+        this.literatureType.removeIf(type -> type.getId().equals(literatureType.getId()));
     }
 
-    public Set<IntellectualLevel> getIntellectualLevels() {
-        return new HashSet<>(this.intellectualLevels);
+    public Set<IntellectualLevel> getIntellectualLevel() {
+        return new HashSet<>(this.intellectualLevel);
     }
 
     public void addIntellectualLevel(IntellectualLevel intellectualLevel) {
-        this.intellectualLevels.add(intellectualLevel);
+        this.intellectualLevel.add(intellectualLevel);
     }
 
     public void removeIntellectualLevel(IntellectualLevel intellectualLevel) {
-        this.intellectualLevels.removeIf(type -> type.getId().equals(intellectualLevel.getId()));
+        this.intellectualLevel.removeIf(type -> type.getId().equals(intellectualLevel.getId()));
     }
 }

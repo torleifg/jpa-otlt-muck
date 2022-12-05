@@ -1,5 +1,6 @@
 package com.github.torleifg.discriminator;
 
+import com.github.torleifg.discriminator.codelist.CodelistId;
 import com.github.torleifg.discriminator.codelist.CodelistRepository;
 import com.github.torleifg.discriminator.codelist.LiteratureType;
 import com.github.torleifg.discriminator.expression.Expression;
@@ -7,13 +8,15 @@ import com.github.torleifg.discriminator.expression.ExpressionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.dao.DataIntegrityViolationException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class ExpressionRepositoryIT extends AbstractIntegrationTest {
 
     @Autowired
@@ -21,6 +24,9 @@ class ExpressionRepositoryIT extends AbstractIntegrationTest {
 
     @Autowired
     private CodelistRepository codelistRepository;
+
+    @Autowired
+    private TestEntityManager testEntityManager;
 
     @BeforeEach
     void setup() {
@@ -35,21 +41,30 @@ class ExpressionRepositoryIT extends AbstractIntegrationTest {
         var expression = new Expression();
         expression.addLiteratureType(LiteratureType.of(1));
 
-        expression = expressionRepository.save(expression);
+        expression = expressionRepository.saveAndFlush(expression);
         assertEquals(1, expression.getLiteratureType().size());
+
+        final var literatureType = expression.getLiteratureType().stream()
+                .map(LiteratureType::getId)
+                .map(CodelistId::getCode)
+                .findFirst();
+
+        assertTrue(literatureType.isPresent());
+        assertEquals(1, literatureType.get());
     }
 
     @Test
-    void givenExpressionWithLiteratureTypeWhenLiteratureTypeIsRemovedThenSavingExpressionWillRemoveLiteratureTypeAndJuntionTableRow() {
+    void givenExpressionWithLiteratureTypeWhenLiteratureTypeIsRemovedThenSavingExpressionWillRemoveLiteratureTypeAndJunctionTableRow() {
         codelistRepository.save(LiteratureType.of(1));
 
         var expression = new Expression();
         expression.addLiteratureType(LiteratureType.of(1));
 
-        expression = expressionRepository.save(expression);
+        expression = expressionRepository.saveAndFlush(expression);
         assertEquals(1, expression.getLiteratureType().size());
 
         expression.removeLiteratureType(LiteratureType.of(1));
+        expression = expressionRepository.saveAndFlush(expression);
         assertEquals(0, expression.getLiteratureType().size());
     }
 
@@ -57,10 +72,10 @@ class ExpressionRepositoryIT extends AbstractIntegrationTest {
     void givenInvalidCodeWhenCreateExpressionThenExceptionIsThrown() {
         codelistRepository.save(LiteratureType.of(1));
 
-        final var expression = new Expression();
+        var expression = new Expression();
         expression.addLiteratureType(LiteratureType.of(2));
 
         assertThrows(DataIntegrityViolationException.class, () ->
-                expressionRepository.save(expression));
+                expressionRepository.saveAndFlush(expression));
     }
 }

@@ -14,9 +14,11 @@ public class Work {
     private Long id;
 
     @ManyToMany
+    @JoinTable(name = "work_literature_type_xref")
     private final Set<LiteratureType> literatureType = new HashSet<>();
 
     @ManyToMany
+    @JoinTable(name = "work_intellectual_level_xref")
     private final Set<IntellectualLevel> intellectualLevel = new HashSet<>();
 
     public Long getId() {
@@ -24,7 +26,7 @@ public class Work {
     }
 
     public Set<LiteratureType> getLiteratureType() {
-        return new HashSet<>(this.literatureType);
+        return Collections.unmodifiableSet(this.literatureType);
     }
 
     public void addLiteratureType(LiteratureType literatureType) {
@@ -36,7 +38,7 @@ public class Work {
     }
 
     public Set<IntellectualLevel> getIntellectualLevel() {
-        return new HashSet<>(this.intellectualLevel);
+        return Collections.unmodifiableSet(this.intellectualLevel);
     }
 
     public void addIntellectualLevel(IntellectualLevel intellectualLevel) {

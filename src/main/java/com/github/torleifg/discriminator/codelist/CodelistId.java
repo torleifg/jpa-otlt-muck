@@ -29,6 +29,10 @@ public class CodelistId implements Serializable {
         return list;
     }
 
+    public int getCode() {
+        return code;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

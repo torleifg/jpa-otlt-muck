@@ -18,7 +18,7 @@ create table codelist
     constraint codelist_pkey primary key (list, code)
 );
 
-create table work_intellectual_level
+create table work_intellectual_level_xref
 (
     work_id                 bigint  not null,
     intellectual_level_list integer not null,
@@ -28,7 +28,7 @@ create table work_intellectual_level
     constraint work_intellectual_level_codelist_list_code_fkey foreign key (intellectual_level_list, intellectual_level_code) references public.codelist (list, code)
 );
 
-create table work_literature_type
+create table work_literature_type_xref
 (
     work_id              bigint  not null,
     literature_type_list integer not null,
@@ -38,7 +38,7 @@ create table work_literature_type
     constraint work_literature_type_codelist_list_code_fkey foreign key (literature_type_list, literature_type_code) references public.codelist (list, code)
 );
 
-create table expression_literature_type
+create table expression_literature_type_xref
 (
     expression_id        bigint  not null,
     literature_type_list integer not null,

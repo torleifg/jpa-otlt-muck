@@ -1,7 +1,7 @@
-package com.github.torleifg.discriminator.work;
+package com.github.torleifg.otlt.work;
 
-import com.github.torleifg.discriminator.codelist.IntellectualLevel;
-import com.github.torleifg.discriminator.codelist.LiteratureType;
+import com.github.torleifg.otlt.codelist.bokbasen.IntellectualLevel;
+import com.github.torleifg.otlt.codelist.bokbasen.LiteratureType;
 
 import javax.persistence.*;
 import java.util.*;

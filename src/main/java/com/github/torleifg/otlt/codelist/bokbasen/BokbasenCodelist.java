@@ -1,18 +1,20 @@
-package com.github.torleifg.discriminator.codelist;
+package com.github.torleifg.otlt.codelist.bokbasen;
+
+import com.github.torleifg.otlt.codelist.CodelistId;
 
 import javax.persistence.*;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public abstract class Codelist {
+public abstract class BokbasenCodelist {
 
     @EmbeddedId
     private CodelistId id;
 
-    protected Codelist() {
+    protected BokbasenCodelist() {
     }
 
-    protected Codelist(int list, int code) {
+    protected BokbasenCodelist(int list, int code) {
         this.id = new CodelistId(list, code);
     }
 

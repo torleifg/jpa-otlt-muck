@@ -1,11 +1,11 @@
-package com.github.torleifg.discriminator.codelist;
+package com.github.torleifg.otlt.codelist.bokbasen;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 @Entity
-@DiscriminatorValue("2")
-public class IntellectualLevel extends Codelist {
+@DiscriminatorValue("69")
+public class IntellectualLevel extends BokbasenCodelist {
 
     protected IntellectualLevel() {
     }

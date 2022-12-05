@@ -1,11 +1,11 @@
-package com.github.torleifg.discriminator.codelist;
+package com.github.torleifg.otlt.codelist.bokbasen;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 @Entity
-@DiscriminatorValue("1")
-public class LiteratureType extends Codelist {
+@DiscriminatorValue("55")
+public class LiteratureType extends BokbasenCodelist {
 
     protected LiteratureType() {
     }

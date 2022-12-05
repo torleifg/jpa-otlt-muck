@@ -1,11 +1,11 @@
-package com.github.torleifg.discriminator;
+package com.github.torleifg.otlt;
 
-import com.github.torleifg.discriminator.codelist.CodelistId;
-import com.github.torleifg.discriminator.codelist.CodelistRepository;
-import com.github.torleifg.discriminator.codelist.IntellectualLevel;
-import com.github.torleifg.discriminator.codelist.LiteratureType;
-import com.github.torleifg.discriminator.work.Work;
-import com.github.torleifg.discriminator.work.WorkRepostitory;
+import com.github.torleifg.otlt.codelist.bokbasen.BokbasenCodelistRepository;
+import com.github.torleifg.otlt.codelist.bokbasen.IntellectualLevel;
+import com.github.torleifg.otlt.codelist.bokbasen.LiteratureType;
+import com.github.torleifg.otlt.codelist.CodelistId;
+import com.github.torleifg.otlt.work.Work;
+import com.github.torleifg.otlt.work.WorkRepostitory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ class WorkRespositoryIT extends AbstractIntegrationTest {
     private WorkRepostitory workRepostitory;
 
     @Autowired
-    private CodelistRepository codelistRepository;
+    private BokbasenCodelistRepository bokbasenCodelistRepository;
 
     @Autowired
     private TestEntityManager testEntityManager;
@@ -34,18 +34,18 @@ class WorkRespositoryIT extends AbstractIntegrationTest {
     @BeforeEach
     void setup() {
         workRepostitory.deleteAll();
-        codelistRepository.deleteAll();
+        bokbasenCodelistRepository.deleteAll();
     }
 
     @Test
     void givenValidCodesWhenCreateWorkThenWorkIsSaved() {
-        codelistRepository.saveAll(Set.of(LiteratureType.of(1), IntellectualLevel.of(1)));
+        bokbasenCodelistRepository.saveAll(Set.of(LiteratureType.of(1), IntellectualLevel.of(1)));
 
         var work = new Work();
         work.addIntellectualLevel(IntellectualLevel.of(1));
         work.addLiteratureType(LiteratureType.of(1));
 
-        work = workRepostitory.saveAndFlush(work);
+        work = workRepostitory.save(work);
         assertEquals(1, work.getLiteratureType().size());
         assertEquals(1, work.getIntellectualLevel().size());
 
@@ -60,23 +60,23 @@ class WorkRespositoryIT extends AbstractIntegrationTest {
 
     @Test
     void givenWorkWithLiteratureTypeWhenLiteratureTypeIsRemovedThenSavingWorkWillRemoveLiteratureTypeAndJunctionTableRow() {
-        codelistRepository.saveAll(Set.of(LiteratureType.of(1), IntellectualLevel.of(1)));
+        bokbasenCodelistRepository.saveAll(Set.of(LiteratureType.of(1), IntellectualLevel.of(1)));
 
         var work = new Work();
         work.addIntellectualLevel(IntellectualLevel.of(1));
         work.addLiteratureType(LiteratureType.of(1));
 
-        work = workRepostitory.saveAndFlush(work);
+        work = workRepostitory.save(work);
         assertEquals(1, work.getLiteratureType().size());
 
         work.removeLiteratureType(LiteratureType.of(1));
-        work = workRepostitory.saveAndFlush(work);
+        work = workRepostitory.save(work);
         assertEquals(0, work.getLiteratureType().size());
     }
 
     @Test
     void givenInvalidCodeWhenCreateWorkThenExceptionIsThrown() {
-        codelistRepository.saveAll(Set.of(LiteratureType.of(1), IntellectualLevel.of(1)));
+        bokbasenCodelistRepository.saveAll(Set.of(LiteratureType.of(1), IntellectualLevel.of(1)));
 
         var work = new Work();
         work.addIntellectualLevel(IntellectualLevel.of(1));

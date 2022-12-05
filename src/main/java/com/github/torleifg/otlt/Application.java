@@ -1,4 +1,4 @@
-package com.github.torleifg.discriminator;
+package com.github.torleifg.otlt;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

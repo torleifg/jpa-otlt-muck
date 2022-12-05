@@ -1,10 +1,10 @@
-package com.github.torleifg.discriminator;
+package com.github.torleifg.otlt;
 
-import com.github.torleifg.discriminator.codelist.CodelistId;
-import com.github.torleifg.discriminator.codelist.CodelistRepository;
-import com.github.torleifg.discriminator.codelist.LiteratureType;
-import com.github.torleifg.discriminator.expression.Expression;
-import com.github.torleifg.discriminator.expression.ExpressionRepository;
+import com.github.torleifg.otlt.codelist.CodelistId;
+import com.github.torleifg.otlt.codelist.onix.OnixCodelistRepository;
+import com.github.torleifg.otlt.codelist.onix.ProductContentType;
+import com.github.torleifg.otlt.expression.Expression;
+import com.github.torleifg.otlt.expression.ExpressionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ class ExpressionRepositoryIT extends AbstractIntegrationTest {
     private ExpressionRepository expressionRepository;
 
     @Autowired
-    private CodelistRepository codelistRepository;
+    private OnixCodelistRepository onixCodelistRepository;
 
     @Autowired
     private TestEntityManager testEntityManager;
@@ -31,21 +31,21 @@ class ExpressionRepositoryIT extends AbstractIntegrationTest {
     @BeforeEach
     void setup() {
         expressionRepository.deleteAll();
-        codelistRepository.deleteAll();
+        onixCodelistRepository.deleteAll();
     }
 
     @Test
     void givenValidCodesWhenCreateExpressionThenExpressionIsSaved() {
-        codelistRepository.save(LiteratureType.of(1));
+        onixCodelistRepository.save(ProductContentType.of(1));
 
         var expression = new Expression();
-        expression.addLiteratureType(LiteratureType.of(1));
+        expression.addProductContentType(ProductContentType.of(1));
 
-        expression = expressionRepository.saveAndFlush(expression);
-        assertEquals(1, expression.getLiteratureType().size());
+        expression = expressionRepository.save(expression);
+        assertEquals(1, expression.getProductContentType().size());
 
-        final var literatureType = expression.getLiteratureType().stream()
-                .map(LiteratureType::getId)
+        final var literatureType = expression.getProductContentType().stream()
+                .map(ProductContentType::getId)
                 .map(CodelistId::getCode)
                 .findFirst();
 
@@ -55,25 +55,25 @@ class ExpressionRepositoryIT extends AbstractIntegrationTest {
 
     @Test
     void givenExpressionWithLiteratureTypeWhenLiteratureTypeIsRemovedThenSavingExpressionWillRemoveLiteratureTypeAndJunctionTableRow() {
-        codelistRepository.save(LiteratureType.of(1));
+        onixCodelistRepository.save(ProductContentType.of(1));
 
         var expression = new Expression();
-        expression.addLiteratureType(LiteratureType.of(1));
+        expression.addProductContentType(ProductContentType.of(1));
 
-        expression = expressionRepository.saveAndFlush(expression);
-        assertEquals(1, expression.getLiteratureType().size());
+        expression = expressionRepository.save(expression);
+        assertEquals(1, expression.getProductContentType().size());
 
-        expression.removeLiteratureType(LiteratureType.of(1));
-        expression = expressionRepository.saveAndFlush(expression);
-        assertEquals(0, expression.getLiteratureType().size());
+        expression.removeProductContentType(ProductContentType.of(1));
+        expression = expressionRepository.save(expression);
+        assertEquals(0, expression.getProductContentType().size());
     }
 
     @Test
     void givenInvalidCodeWhenCreateExpressionThenExceptionIsThrown() {
-        codelistRepository.save(LiteratureType.of(1));
+        onixCodelistRepository.save(ProductContentType.of(1));
 
         var expression = new Expression();
-        expression.addLiteratureType(LiteratureType.of(2));
+        expression.addProductContentType(ProductContentType.of(2));
 
         assertThrows(DataIntegrityViolationException.class, () ->
                 expressionRepository.saveAndFlush(expression));

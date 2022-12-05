@@ -39,13 +39,13 @@ class WorkRespositoryIT extends AbstractIntegrationTest {
 
     @Test
     void givenValidCodesWhenCreateWorkThenWorkIsSaved() {
-        bokbasenCodelistRepository.saveAll(Set.of(LiteratureType.of(1), IntellectualLevel.of(1)));
+        bokbasenCodelistRepository.saveAllAndFlush(Set.of(LiteratureType.of(1), IntellectualLevel.of(1)));
 
         var work = new Work();
         work.addIntellectualLevel(IntellectualLevel.of(1));
         work.addLiteratureType(LiteratureType.of(1));
 
-        work = workRepostitory.save(work);
+        work = workRepostitory.saveAndFlush(work);
         assertEquals(1, work.getLiteratureType().size());
         assertEquals(1, work.getIntellectualLevel().size());
 
@@ -60,23 +60,24 @@ class WorkRespositoryIT extends AbstractIntegrationTest {
 
     @Test
     void givenWorkWithLiteratureTypeWhenLiteratureTypeIsRemovedThenSavingWorkWillRemoveLiteratureTypeAndJunctionTableRow() {
-        bokbasenCodelistRepository.saveAll(Set.of(LiteratureType.of(1), IntellectualLevel.of(1)));
+        bokbasenCodelistRepository.saveAllAndFlush(Set.of(LiteratureType.of(1), IntellectualLevel.of(1)));
 
         var work = new Work();
         work.addIntellectualLevel(IntellectualLevel.of(1));
         work.addLiteratureType(LiteratureType.of(1));
-
-        work = workRepostitory.save(work);
+        workRepostitory.saveAndFlush(work);
         assertEquals(1, work.getLiteratureType().size());
+        assertEquals(1, work.getIntellectualLevel().size());
 
         work.removeLiteratureType(LiteratureType.of(1));
-        work = workRepostitory.save(work);
+        workRepostitory.saveAndFlush(work);
         assertEquals(0, work.getLiteratureType().size());
+        assertEquals(1, work.getIntellectualLevel().size());
     }
 
     @Test
     void givenInvalidCodeWhenCreateWorkThenExceptionIsThrown() {
-        bokbasenCodelistRepository.saveAll(Set.of(LiteratureType.of(1), IntellectualLevel.of(1)));
+        bokbasenCodelistRepository.saveAllAndFlush(Set.of(LiteratureType.of(1), IntellectualLevel.of(1)));
 
         var work = new Work();
         work.addIntellectualLevel(IntellectualLevel.of(1));

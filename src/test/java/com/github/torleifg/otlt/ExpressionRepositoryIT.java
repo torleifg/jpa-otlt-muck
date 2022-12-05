@@ -36,12 +36,12 @@ class ExpressionRepositoryIT extends AbstractIntegrationTest {
 
     @Test
     void givenValidCodesWhenCreateExpressionThenExpressionIsSaved() {
-        onixCodelistRepository.save(ProductContentType.of(1));
+        onixCodelistRepository.saveAndFlush(ProductContentType.of(1));
 
         var expression = new Expression();
         expression.addProductContentType(ProductContentType.of(1));
 
-        expression = expressionRepository.save(expression);
+        expression = expressionRepository.saveAndFlush(expression);
         assertEquals(1, expression.getProductContentType().size());
 
         final var literatureType = expression.getProductContentType().stream()
@@ -55,22 +55,21 @@ class ExpressionRepositoryIT extends AbstractIntegrationTest {
 
     @Test
     void givenExpressionWithLiteratureTypeWhenLiteratureTypeIsRemovedThenSavingExpressionWillRemoveLiteratureTypeAndJunctionTableRow() {
-        onixCodelistRepository.save(ProductContentType.of(1));
+        onixCodelistRepository.saveAndFlush(ProductContentType.of(1));
 
         var expression = new Expression();
         expression.addProductContentType(ProductContentType.of(1));
-
-        expression = expressionRepository.save(expression);
+        expressionRepository.saveAndFlush(expression);
         assertEquals(1, expression.getProductContentType().size());
 
         expression.removeProductContentType(ProductContentType.of(1));
-        expression = expressionRepository.save(expression);
+        expressionRepository.saveAndFlush(expression);
         assertEquals(0, expression.getProductContentType().size());
     }
 
     @Test
     void givenInvalidCodeWhenCreateExpressionThenExceptionIsThrown() {
-        onixCodelistRepository.save(ProductContentType.of(1));
+        onixCodelistRepository.saveAndFlush(ProductContentType.of(1));
 
         var expression = new Expression();
         expression.addProductContentType(ProductContentType.of(2));

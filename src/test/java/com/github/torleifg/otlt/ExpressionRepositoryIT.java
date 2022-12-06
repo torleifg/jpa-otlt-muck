@@ -36,7 +36,7 @@ class ExpressionRepositoryIT extends AbstractIntegrationTest {
 
     @Test
     void givenValidCodesWhenCreateExpressionThenExpressionIsSaved() {
-        onixCodelistRepository.saveAndFlush(ProductContentType.of(1));
+        onixCodelistRepository.save(ProductContentType.of(1));
 
         var expression = new Expression();
         expression.addProductContentType(ProductContentType.of(1));
@@ -55,7 +55,7 @@ class ExpressionRepositoryIT extends AbstractIntegrationTest {
 
     @Test
     void givenExpressionWithLiteratureTypeWhenLiteratureTypeIsRemovedThenSavingExpressionWillRemoveLiteratureTypeAndJunctionTableRow() {
-        onixCodelistRepository.saveAndFlush(ProductContentType.of(1));
+        onixCodelistRepository.save(ProductContentType.of(1));
 
         var expression = new Expression();
         expression.addProductContentType(ProductContentType.of(1));
@@ -69,7 +69,7 @@ class ExpressionRepositoryIT extends AbstractIntegrationTest {
 
     @Test
     void givenInvalidCodeWhenCreateExpressionThenExceptionIsThrown() {
-        onixCodelistRepository.saveAndFlush(ProductContentType.of(1));
+        onixCodelistRepository.save(ProductContentType.of(1));
 
         var expression = new Expression();
         expression.addProductContentType(ProductContentType.of(2));

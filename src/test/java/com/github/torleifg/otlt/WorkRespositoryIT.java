@@ -39,7 +39,7 @@ class WorkRespositoryIT extends AbstractIntegrationTest {
 
     @Test
     void givenValidCodesWhenCreateWorkThenWorkIsSaved() {
-        bokbasenCodelistRepository.saveAllAndFlush(Set.of(LiteratureType.of(1), IntellectualLevel.of(1)));
+        bokbasenCodelistRepository.saveAll(Set.of(LiteratureType.of(1), IntellectualLevel.of(1)));
 
         var work = new Work();
         work.addIntellectualLevel(IntellectualLevel.of(1));
@@ -60,24 +60,25 @@ class WorkRespositoryIT extends AbstractIntegrationTest {
 
     @Test
     void givenWorkWithLiteratureTypeWhenLiteratureTypeIsRemovedThenSavingWorkWillRemoveLiteratureTypeAndJunctionTableRow() {
-        bokbasenCodelistRepository.saveAllAndFlush(Set.of(LiteratureType.of(1), IntellectualLevel.of(1)));
+        bokbasenCodelistRepository.saveAll(Set.of(LiteratureType.of(1), LiteratureType.of(2),  IntellectualLevel.of(1)));
 
         var work = new Work();
         work.addIntellectualLevel(IntellectualLevel.of(1));
         work.addLiteratureType(LiteratureType.of(1));
+        work.addLiteratureType(LiteratureType.of(2));
         workRepostitory.saveAndFlush(work);
-        assertEquals(1, work.getLiteratureType().size());
+        assertEquals(2, work.getLiteratureType().size());
         assertEquals(1, work.getIntellectualLevel().size());
 
         work.removeLiteratureType(LiteratureType.of(1));
         workRepostitory.saveAndFlush(work);
-        assertEquals(0, work.getLiteratureType().size());
+        assertEquals(1, work.getLiteratureType().size());
         assertEquals(1, work.getIntellectualLevel().size());
     }
 
     @Test
     void givenInvalidCodeWhenCreateWorkThenExceptionIsThrown() {
-        bokbasenCodelistRepository.saveAllAndFlush(Set.of(LiteratureType.of(1), IntellectualLevel.of(1)));
+        bokbasenCodelistRepository.saveAll(Set.of(LiteratureType.of(1), IntellectualLevel.of(1)));
 
         var work = new Work();
         work.addIntellectualLevel(IntellectualLevel.of(1));

@@ -11,7 +11,7 @@ public class IntellectualLevel extends BokbasenCodelist {
     }
 
     private IntellectualLevel(int code) {
-        super(2, code);
+        super(69, code);
     }
 
     public static IntellectualLevel of(int code) {

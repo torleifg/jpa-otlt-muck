@@ -11,7 +11,7 @@ public class LiteratureType extends BokbasenCodelist {
     }
 
     private LiteratureType(int code) {
-        super(1, code);
+        super(55, code);
     }
 
     public static LiteratureType of(int code) {

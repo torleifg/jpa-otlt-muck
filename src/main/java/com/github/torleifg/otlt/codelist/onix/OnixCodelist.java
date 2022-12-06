@@ -1,6 +1,7 @@
 package com.github.torleifg.otlt.codelist.onix;
 
 import com.github.torleifg.otlt.codelist.CodelistId;
+import org.hibernate.annotations.DiscriminatorFormula;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -9,6 +10,7 @@ import javax.persistence.InheritanceType;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorFormula(value = "list")
 public abstract class OnixCodelist {
 
     @EmbeddedId

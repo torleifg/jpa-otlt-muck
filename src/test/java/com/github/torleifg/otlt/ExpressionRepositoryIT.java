@@ -59,10 +59,12 @@ class ExpressionRepositoryIT extends AbstractIntegrationTest {
 
         var expression = new Expression();
         expression.addProductContentType(ProductContentType.of(1));
+
         expressionRepository.saveAndFlush(expression);
         assertEquals(1, expression.getProductContentType().size());
 
         expression.removeProductContentType(ProductContentType.of(1));
+
         expressionRepository.saveAndFlush(expression);
         assertEquals(0, expression.getProductContentType().size());
     }

@@ -1,11 +1,19 @@
 package com.github.torleifg.otlt.codelist.bokbasen;
 
+import com.github.torleifg.otlt.work.Work;
+
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @DiscriminatorValue("69")
 public class IntellectualLevel extends BokbasenCodelist {
+
+    @ManyToMany(mappedBy = "intellectualLevel")
+    private final Set<Work> work = new HashSet<>();
 
     protected IntellectualLevel() {
     }
@@ -16,5 +24,9 @@ public class IntellectualLevel extends BokbasenCodelist {
 
     public static IntellectualLevel of(int code) {
         return new IntellectualLevel(code);
+    }
+
+    public Set<Work> getWork() {
+        return work;
     }
 }

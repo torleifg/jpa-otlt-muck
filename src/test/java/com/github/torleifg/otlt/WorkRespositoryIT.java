@@ -1,5 +1,6 @@
 package com.github.torleifg.otlt;
 
+import com.github.torleifg.otlt.codelist.bokbasen.BokbasenCodelist;
 import com.github.torleifg.otlt.codelist.bokbasen.BokbasenCodelistRepository;
 import com.github.torleifg.otlt.codelist.bokbasen.IntellectualLevel;
 import com.github.torleifg.otlt.codelist.bokbasen.LiteratureType;
@@ -11,14 +12,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.dao.DataIntegrityViolationException;
-
-import java.util.Set;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
+@Transactional(propagation = Propagation.NOT_SUPPORTED)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class WorkRespositoryIT extends AbstractIntegrationTest {
 
@@ -26,10 +27,7 @@ class WorkRespositoryIT extends AbstractIntegrationTest {
     private WorkRepostitory workRepostitory;
 
     @Autowired
-    private BokbasenCodelistRepository bokbasenCodelistRepository;
-
-    @Autowired
-    private TestEntityManager testEntityManager;
+    private BokbasenCodelistRepository<? super BokbasenCodelist> bokbasenCodelistRepository;
 
     @BeforeEach
     void setup() {
@@ -39,54 +37,61 @@ class WorkRespositoryIT extends AbstractIntegrationTest {
 
     @Test
     void givenValidCodesWhenCreateWorkThenWorkIsSaved() {
-        bokbasenCodelistRepository.saveAll(Set.of(LiteratureType.of(1), IntellectualLevel.of(1)));
+        final var intellectualLevel = bokbasenCodelistRepository.save(IntellectualLevel.of(1));
+        final var literatureType  = bokbasenCodelistRepository.save(LiteratureType.of(1));
 
         final var work = new Work();
-        work.addIntellectualLevel(IntellectualLevel.of(1));
-        work.addLiteratureType(LiteratureType.of(1));
+        work.addIntellectualLevel(intellectualLevel);
+        work.addLiteratureType(literatureType);
 
-        workRepostitory.saveAndFlush(work);
-        assertEquals(1, work.getLiteratureType().size());
+        workRepostitory.save(work);
         assertEquals(1, work.getIntellectualLevel().size());
+        assertEquals(1, work.getLiteratureType().size());
 
-        final var intellectualLevel = work.getIntellectualLevel().stream()
+        final var code = work.getIntellectualLevel().stream()
                 .map(IntellectualLevel::getId)
                 .map(CodelistId::getCode)
                 .findFirst();
 
-        assertTrue(intellectualLevel.isPresent());
-        assertEquals(1, intellectualLevel.get());
+        assertTrue(code.isPresent());
+        assertEquals(1, code.get());
+
+        final var id = intellectualLevel.getWork().stream()
+                .map(Work::getId)
+                .findFirst();
+
+        assertTrue(id.isPresent());
     }
 
     @Test
     void givenWorkWithLiteratureTypeWhenLiteratureTypeIsRemovedThenSavingWorkWillRemoveLiteratureTypeAndJunctionTableRow() {
-        bokbasenCodelistRepository.saveAll(Set.of(LiteratureType.of(1), LiteratureType.of(2),  IntellectualLevel.of(1)));
+        final var intellectualLevel = bokbasenCodelistRepository.save(IntellectualLevel.of(1));
+        final var literatureType  = bokbasenCodelistRepository.save(LiteratureType.of(1));
 
         final var work = new Work();
-        work.addIntellectualLevel(IntellectualLevel.of(1));
-        work.addLiteratureType(LiteratureType.of(1));
-        work.addLiteratureType(LiteratureType.of(2));
+        work.addIntellectualLevel(intellectualLevel);
+        work.addLiteratureType(literatureType);
 
-        workRepostitory.saveAndFlush(work);
-        assertEquals(2, work.getLiteratureType().size());
+        workRepostitory.save(work);
         assertEquals(1, work.getIntellectualLevel().size());
-
-        work.removeLiteratureType(LiteratureType.of(1));
-
-        workRepostitory.saveAndFlush(work);
         assertEquals(1, work.getLiteratureType().size());
-        assertEquals(1, work.getIntellectualLevel().size());
+
+        work.removeIntellectualLevel(intellectualLevel);
+
+        workRepostitory.save(work);
+        assertEquals(0, work.getIntellectualLevel().size());
+        assertEquals(1, work.getLiteratureType().size());
     }
 
     @Test
     void givenInvalidCodeWhenCreateWorkThenExceptionIsThrown() {
-        bokbasenCodelistRepository.saveAll(Set.of(LiteratureType.of(1), IntellectualLevel.of(1)));
+        final var intellectualLevel = bokbasenCodelistRepository.save(IntellectualLevel.of(1));
 
         final var work = new Work();
-        work.addIntellectualLevel(IntellectualLevel.of(1));
-        work.addLiteratureType(LiteratureType.of(2));
+        work.addIntellectualLevel(intellectualLevel);
+        work.addLiteratureType(LiteratureType.of(1));
 
         assertThrows(DataIntegrityViolationException.class, () ->
-                workRepostitory.saveAndFlush(work));
+                workRepostitory.save(work));
     }
 }

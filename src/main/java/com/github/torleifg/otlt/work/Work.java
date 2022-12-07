@@ -26,26 +26,30 @@ public class Work {
     }
 
     public Set<LiteratureType> getLiteratureType() {
-        return Collections.unmodifiableSet(this.literatureType);
+        return literatureType;
     }
 
     public void addLiteratureType(LiteratureType literatureType) {
         this.literatureType.add(literatureType);
+        literatureType.getWork().add(this);
     }
 
     public void removeLiteratureType(LiteratureType literatureType) {
-        this.literatureType.removeIf(type -> type.getId().equals(literatureType.getId()));
+        this.literatureType.remove(literatureType);
+        literatureType.getWork().remove(this);
     }
 
     public Set<IntellectualLevel> getIntellectualLevel() {
-        return Collections.unmodifiableSet(this.intellectualLevel);
+        return intellectualLevel;
     }
 
     public void addIntellectualLevel(IntellectualLevel intellectualLevel) {
         this.intellectualLevel.add(intellectualLevel);
+        intellectualLevel.getWork().add(this);
     }
 
     public void removeIntellectualLevel(IntellectualLevel intellectualLevel) {
-        this.intellectualLevel.removeIf(type -> type.getId().equals(intellectualLevel.getId()));
+        this.intellectualLevel.remove(intellectualLevel);
+        intellectualLevel.getWork().remove(this);
     }
 }

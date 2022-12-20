@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-@Transactional(propagation = Propagation.NOT_SUPPORTED)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class WorkRespositoryIT extends AbstractIntegrationTest {
 
@@ -38,15 +37,21 @@ class WorkRespositoryIT extends AbstractIntegrationTest {
     @Test
     void givenValidCodesWhenCreateWorkThenWorkIsSaved() {
         final var intellectualLevel = bokbasenCodelistRepository.save(IntellectualLevel.of(1));
+        assertNotNull(intellectualLevel.getId());
+
         final var literatureType  = bokbasenCodelistRepository.save(LiteratureType.of(1));
+        assertNotNull(literatureType.getId());
 
         final var work = new Work();
         work.addIntellectualLevel(intellectualLevel);
         work.addLiteratureType(literatureType);
-
         workRepostitory.save(work);
-        assertEquals(1, work.getIntellectualLevel().size());
-        assertEquals(1, work.getLiteratureType().size());
+        assertNotNull(work.getId());
+
+        final var first = workRepostitory.findById(work.getId());
+        assertTrue(first.isPresent());
+        assertEquals(1, first.get().getIntellectualLevel().size());
+        assertEquals(1, first.get().getLiteratureType().size());
 
         final var code = work.getIntellectualLevel().stream()
                 .map(IntellectualLevel::getId)
@@ -56,36 +61,50 @@ class WorkRespositoryIT extends AbstractIntegrationTest {
         assertTrue(code.isPresent());
         assertEquals(1, code.get());
 
-        final var id = intellectualLevel.getWork().stream()
+        final var second = bokbasenCodelistRepository.findById(literatureType.getId());
+        assertTrue(second.isPresent());
+        assertTrue(second.get() instanceof LiteratureType);
+
+        final var id = ((LiteratureType) second.get()).getWork().stream()
                 .map(Work::getId)
                 .findFirst();
 
         assertTrue(id.isPresent());
+        assertEquals(work.getId(), id.get());
     }
 
     @Test
     void givenWorkWithLiteratureTypeWhenLiteratureTypeIsRemovedThenSavingWorkWillRemoveLiteratureTypeAndJunctionTableRow() {
         final var intellectualLevel = bokbasenCodelistRepository.save(IntellectualLevel.of(1));
+        assertNotNull(intellectualLevel.getId());
+
         final var literatureType  = bokbasenCodelistRepository.save(LiteratureType.of(1));
+        assertNotNull(literatureType.getId());
 
         final var work = new Work();
         work.addIntellectualLevel(intellectualLevel);
         work.addLiteratureType(literatureType);
-
         workRepostitory.save(work);
+        assertNotNull(work.getId());
+
+        final var first = workRepostitory.findById(work.getId());
+        assertTrue(first.isPresent());
+        assertEquals(1, first.get().getIntellectualLevel().size());
+        assertEquals(1, first.get().getLiteratureType().size());
+
+        first.ifPresent(exp -> exp.removeLiteratureType(literatureType));
+
+        final var second = workRepostitory.findById(work.getId());
+        assertTrue(second.isPresent());
         assertEquals(1, work.getIntellectualLevel().size());
-        assertEquals(1, work.getLiteratureType().size());
-
-        work.removeIntellectualLevel(intellectualLevel);
-
-        workRepostitory.save(work);
-        assertEquals(0, work.getIntellectualLevel().size());
-        assertEquals(1, work.getLiteratureType().size());
+        assertEquals(0, work.getLiteratureType().size());
     }
 
     @Test
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     void givenInvalidCodeWhenCreateWorkThenExceptionIsThrown() {
         final var intellectualLevel = bokbasenCodelistRepository.save(IntellectualLevel.of(1));
+        assertNotNull(intellectualLevel.getId());
 
         final var work = new Work();
         work.addIntellectualLevel(intellectualLevel);

@@ -26,6 +26,12 @@ create table onix_codelist
     constraint onix_codelist_pkey primary key (list, code)
 );
 
+create table title
+(
+    id bigint generated always as identity,
+    constraint title_pkey primary key (id)
+);
+
 create table work_intellectual_level_xref
 (
     work_id                 bigint  not null,

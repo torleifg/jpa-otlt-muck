@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class WorkRespositoryIT extends AbstractIntegrationTest {
+class WorkRepositoryIT extends AbstractIntegrationTest {
 
     @Autowired
     private WorkRepostitory workRepostitory;

@@ -6,14 +6,12 @@ import com.github.torleifg.otlt.codelist.onix.OnixCodelistRepository;
 import com.github.torleifg.otlt.codelist.onix.ProductContentType;
 import com.github.torleifg.otlt.expression.Expression;
 import com.github.torleifg.otlt.expression.ExpressionRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,21 +25,19 @@ class ExpressionRepositoryIT extends AbstractIntegrationTest {
     @Autowired
     private OnixCodelistRepository<? super OnixCodelist> onixCodelistRepository;
 
-    @BeforeEach
-    void setup() {
-        expressionRepository.deleteAll();
-        onixCodelistRepository.deleteAll();
-    }
+    @Autowired
+    private TestEntityManager testEntityManager;
 
     @Test
-    void givenValidCodesWhenCreateExpressionThenExpressionIsSaved() {
-        final var productContentType = onixCodelistRepository.save(ProductContentType.of(1));
-        assertNotNull(productContentType.getId());
+    void addProductContentTypeTest() {
+        final var productContentType = ProductContentType.of(1);
+        testEntityManager.persist(productContentType);
 
         final var expression = new Expression();
         expression.addProductContentType(productContentType);
-        expressionRepository.save(expression);
-        assertNotNull(expression.getId());
+        testEntityManager.persistAndFlush(expression);
+
+        testEntityManager.clear();
 
         final var first = expressionRepository.findById(expression.getId());
         assertTrue(first.isPresent());
@@ -68,36 +64,34 @@ class ExpressionRepositoryIT extends AbstractIntegrationTest {
     }
 
     @Test
-    void givenExpressionWithLiteratureTypeWhenLiteratureTypeIsRemovedThenSavingExpressionWillRemoveLiteratureTypeAndJunctionTableRow() {
-        final var productContentType = onixCodelistRepository.save(ProductContentType.of(1));
-        assertNotNull(productContentType.getId());
+    void addAndRemoveProductContentTypeTest() {
+        final var productContentType = ProductContentType.of(1);
+        testEntityManager.persist(productContentType);
 
         final var expression = new Expression();
         expression.addProductContentType(productContentType);
-        expressionRepository.save(expression);
-        assertNotNull(expression.getId());
+        testEntityManager.persistAndFlush(expression);
+
+        expression.removeProductContentType(productContentType);
+        testEntityManager.persistAndFlush(expression);
+
+        testEntityManager.clear();
 
         final var first = expressionRepository.findById(expression.getId());
         assertTrue(first.isPresent());
-        assertEquals(1, first.get().getProductContentType().size());
-
-        first.ifPresent(exp -> exp.removeProductContentType(productContentType));
-
-        final var second = expressionRepository.findById(expression.getId());
-        assertTrue(second.isPresent());
-        assertEquals(0, second.get().getProductContentType().size());
+        assertEquals(0, first.get().getProductContentType().size());
     }
 
     @Test
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    void givenInvalidCodeWhenCreateExpressionThenExceptionIsThrown() {
-        final var productContentType = onixCodelistRepository.save(ProductContentType.of(1));
-        assertNotNull(productContentType.getId());
+    void addInvalidProductContentTypeThrowsExceptionTest() {
+        final var productContentType = ProductContentType.of(1);
+        testEntityManager.persist(productContentType);
 
-        final var expression = new Expression();
-        expression.addProductContentType(ProductContentType.of(2));
+        assertThrows(DataIntegrityViolationException.class, () -> {
+            final var expression = new Expression();
+            expression.addProductContentType(ProductContentType.of(2));
+            expressionRepository.saveAndFlush(expression);
 
-        assertThrows(DataIntegrityViolationException.class, () ->
-                expressionRepository.save(expression));
+        });
     }
 }

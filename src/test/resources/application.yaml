@@ -5,8 +5,3 @@ spring:
 
   flyway:
     enabled: true
-
-logging:
-  level:
-    org.hibernate.sql: debug
-    org.hibernate.type.descriptor.sql.BasicBinder: trace

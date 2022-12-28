@@ -14,7 +14,6 @@ create table bokbasen_codelist
 (
     list  integer not null,
     code  integer not null,
-    dtype varchar,
     constraint bokbasen_codelist_pkey primary key (list, code)
 );
 
@@ -22,7 +21,6 @@ create table onix_codelist
 (
     list  integer not null,
     code  integer not null,
-    dtype varchar,
     constraint onix_codelist_pkey primary key (list, code)
 );
 

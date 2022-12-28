@@ -2,6 +2,23 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-
+    properties:
+      hibernate:
+        # generate_statistics: true
+        format_sql: true
+        session:
+          events:
+            log:
+              LOG_QUERIES_SLOWER_THAN_MS: 20
   flyway:
     enabled: true
+
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
+        stat: debug
+        SQL_SLOW: info

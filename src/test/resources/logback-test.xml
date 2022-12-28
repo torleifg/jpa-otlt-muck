@@ -11,6 +11,4 @@
 
     <logger name="org.testcontainers" level="INFO"/>
     <logger name="com.github.dockerjava" level="WARN"/>
-    <logger name="org.hibernate.SQL" level="debug"/>
-    <logger name="org.hibernate.type.descriptor.sql" level="trace"/>
 </configuration>

@@ -9,15 +9,15 @@ import javax.persistence.*;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "list", discriminatorType = DiscriminatorType.INTEGER)
 @DiscriminatorOptions(insert = false)
-public abstract class BokbasenCodelist {
+public abstract class InternalCodelist {
 
     @EmbeddedId
     private CodelistId id;
 
-    protected BokbasenCodelist() {
+    protected InternalCodelist() {
     }
 
-    protected BokbasenCodelist(int list, int code) {
+    public InternalCodelist(int list, int code) {
         this.id = new CodelistId(list, code);
     }
 

@@ -7,7 +7,7 @@ import java.util.List;
 
 @Entity
 @DiscriminatorValue("100")
-public class TitleType extends BokbasenCodelist {
+public class TitleType extends InternalCodelist {
 
     @OneToMany(mappedBy = "titleType")
     private List<Title> title;

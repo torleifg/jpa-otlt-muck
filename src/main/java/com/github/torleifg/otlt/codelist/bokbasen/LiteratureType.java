@@ -10,7 +10,7 @@ import java.util.Set;
 
 @Entity
 @DiscriminatorValue("55")
-public class LiteratureType extends BokbasenCodelist {
+public class LiteratureType extends InternalCodelist {
 
     @ManyToMany(mappedBy = "literatureType")
     private final Set<Work> work = new HashSet<>();

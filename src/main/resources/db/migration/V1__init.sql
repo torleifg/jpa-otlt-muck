@@ -14,6 +14,7 @@ create table internal_codelist
 (
     list  integer not null,
     code  integer not null,
+    dtype varchar not null,
     constraint internal_codelist_pkey primary key (list, code)
 );
 
@@ -21,6 +22,7 @@ create table onix_codelist
 (
     list  integer not null,
     code  integer not null,
+    dtype varchar not null,
     constraint onix_codelist_pkey primary key (list, code)
 );
 

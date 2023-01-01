@@ -39,20 +39,20 @@ class WorkRepositoryIT extends AbstractIntegrationTest {
 
     @Test
     void addAndRemoveLiteratureTypeFromWorkTest() {
-        final var literatureType = testEntityManager.persistFlushFind(LiteratureType.of(1));
+        testEntityManager.persist(LiteratureType.of(1));
 
         final var work = new Work();
-        work.addLiteratureType(literatureType);
+        work.addLiteratureType(LiteratureType.of(1));
         final var id = testEntityManager.persistAndGetId(work, Long.class);
 
         testEntityManager.flush();
         testEntityManager.clear();
 
-        final var workById = repostitory.findById(id).orElseThrow();
+        final var workByIdOptional = repostitory.findById(id);
+        assertTrue(workByIdOptional.isPresent());
 
-        final var literatureTypeById = testEntityManager.find(LiteratureType.class, literatureType.getId());
-        workById.removeLiteratureType(literatureTypeById);
-
+        final var workById = workByIdOptional.get();
+        workById.removeLiteratureType(LiteratureType.of(1));
         repostitory.saveAndFlush(workById);
 
         assertEquals(0, workById.getLiteratureType().size());
@@ -63,7 +63,7 @@ class WorkRepositoryIT extends AbstractIntegrationTest {
     void addInvalidIntellectualLevelThrowsExceptionTest() {
         assertThrows(DataIntegrityViolationException.class, () -> {
             final var work = new Work();
-            work.addIntellectualLevel(IntellectualLevel.of(2));
+            work.addIntellectualLevel(IntellectualLevel.of(1));
             repostitory.save(work);
         });
     }

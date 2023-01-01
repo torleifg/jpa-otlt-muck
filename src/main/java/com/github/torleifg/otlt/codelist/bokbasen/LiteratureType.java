@@ -13,7 +13,7 @@ import java.util.Set;
 public class LiteratureType extends InternalCodelist {
 
     @ManyToMany(mappedBy = "literatureType")
-    private final Set<Work> work = new HashSet<>();
+    private Set<Work> work = new HashSet<>();
 
     protected LiteratureType() {
     }

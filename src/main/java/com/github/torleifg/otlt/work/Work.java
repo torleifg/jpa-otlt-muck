@@ -14,29 +14,15 @@ public class Work {
     private Long id;
 
     @ManyToMany
-    @JoinTable(name = "work_literature_type_xref")
-    private final Set<LiteratureType> literatureType = new HashSet<>();
+    @JoinTable(name = "work_intellectual_level_xref")
+    private Set<IntellectualLevel> intellectualLevel = new HashSet<>();
 
     @ManyToMany
-    @JoinTable(name = "work_intellectual_level_xref")
-    private final Set<IntellectualLevel> intellectualLevel = new HashSet<>();
+    @JoinTable(name = "work_literature_type_xref")
+    private Set<LiteratureType> literatureType = new HashSet<>();
 
     public Long getId() {
         return id;
-    }
-
-    public Set<LiteratureType> getLiteratureType() {
-        return literatureType;
-    }
-
-    public void addLiteratureType(LiteratureType literatureType) {
-        this.literatureType.add(literatureType);
-        literatureType.getWork().add(this);
-    }
-
-    public void removeLiteratureType(LiteratureType literatureType) {
-        this.literatureType.remove(literatureType);
-        literatureType.getWork().remove(this);
     }
 
     public Set<IntellectualLevel> getIntellectualLevel() {
@@ -51,5 +37,19 @@ public class Work {
     public void removeIntellectualLevel(IntellectualLevel intellectualLevel) {
         this.intellectualLevel.remove(intellectualLevel);
         intellectualLevel.getWork().remove(this);
+    }
+
+    public Set<LiteratureType> getLiteratureType() {
+        return literatureType;
+    }
+
+    public void addLiteratureType(LiteratureType literatureType) {
+        this.literatureType.add(literatureType);
+        literatureType.getWork().add(this);
+    }
+
+    public void removeLiteratureType(LiteratureType literatureType) {
+        this.literatureType.remove(literatureType);
+        literatureType.getWork().remove(this);
     }
 }

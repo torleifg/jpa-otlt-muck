@@ -1,13 +1,9 @@
 package com.github.torleifg.otlt.codelist;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-
 import javax.persistence.Embeddable;
 import java.io.Serializable;
+import java.util.Objects;
 
-@Getter
-@EqualsAndHashCode
 @Embeddable
 public class CodelistId implements Serializable {
     private int list;
@@ -19,5 +15,23 @@ public class CodelistId implements Serializable {
     public CodelistId(int list, int code) {
         this.list = list;
         this.code = code;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof CodelistId that)) {
+            return false;
+        }
+
+        return list == that.list && code == that.code;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(list, code);
     }
 }

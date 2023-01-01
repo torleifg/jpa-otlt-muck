@@ -1,14 +1,12 @@
 package com.github.torleifg.otlt.codelist.bokbasen;
 
 import com.github.torleifg.otlt.codelist.CodelistId;
-import org.hibernate.annotations.DiscriminatorOptions;
 
 import javax.persistence.*;
 
 @Entity
+@DiscriminatorColumn
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "list", discriminatorType = DiscriminatorType.INTEGER)
-@DiscriminatorOptions(insert = false)
 public abstract class InternalCodelist {
 
     @EmbeddedId
@@ -23,5 +21,24 @@ public abstract class InternalCodelist {
 
     public CodelistId getId() {
         return id;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof InternalCodelist that)) {
+            return false;
+        }
+
+        return id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 }

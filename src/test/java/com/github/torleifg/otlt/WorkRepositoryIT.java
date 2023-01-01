@@ -1,7 +1,7 @@
 package com.github.torleifg.otlt;
 
-import com.github.torleifg.otlt.codelist.bokbasen.IntellectualLevel;
-import com.github.torleifg.otlt.codelist.bokbasen.LiteratureType;
+import com.github.torleifg.otlt.codelist.internal.IntellectualLevel;
+import com.github.torleifg.otlt.codelist.internal.LiteratureType;
 import com.github.torleifg.otlt.work.Work;
 import com.github.torleifg.otlt.work.WorkRepostitory;
 import org.junit.jupiter.api.Test;

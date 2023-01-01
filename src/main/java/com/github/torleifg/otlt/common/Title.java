@@ -1,6 +1,6 @@
 package com.github.torleifg.otlt.common;
 
-import com.github.torleifg.otlt.codelist.bokbasen.TitleType;
+import com.github.torleifg.otlt.codelist.internal.TitleType;
 import com.github.torleifg.otlt.manifestation.Manifestation;
 
 import javax.persistence.*;

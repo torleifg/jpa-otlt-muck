@@ -1,4 +1,4 @@
-package com.github.torleifg.otlt.codelist.bokbasen;
+package com.github.torleifg.otlt.codelist.internal;
 
 import com.github.torleifg.otlt.codelist.CodelistId;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,9 +1,9 @@
 package com.github.torleifg.otlt;
 
-import com.github.torleifg.otlt.codelist.bokbasen.IntellectualLevel;
-import com.github.torleifg.otlt.codelist.bokbasen.InternalCodelist;
-import com.github.torleifg.otlt.codelist.bokbasen.InternalCodelistRepository;
-import com.github.torleifg.otlt.codelist.bokbasen.LiteratureType;
+import com.github.torleifg.otlt.codelist.internal.IntellectualLevel;
+import com.github.torleifg.otlt.codelist.internal.InternalCodelist;
+import com.github.torleifg.otlt.codelist.internal.InternalCodelistRepository;
+import com.github.torleifg.otlt.codelist.internal.LiteratureType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;

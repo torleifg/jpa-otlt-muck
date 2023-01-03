@@ -12,13 +12,3 @@ spring:
               LOG_QUERIES_SLOWER_THAN_MS: 20
   flyway:
     enabled: true
-
-logging:
-  level:
-    org:
-      hibernate:
-        type:
-          descriptor:
-            sql: trace
-        stat: debug
-        SQL_SLOW: info

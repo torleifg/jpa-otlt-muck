@@ -13,7 +13,7 @@ import java.util.Set;
 public class IntellectualLevel extends InternalCodelist {
 
     @ManyToMany(mappedBy = "intellectualLevel")
-    private Set<Work> work = new HashSet<>();
+    private final Set<Work> work = new HashSet<>();
 
     protected IntellectualLevel() {
     }

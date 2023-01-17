@@ -22,23 +22,4 @@ public abstract class InternalCodelist {
     public CodelistId getId() {
         return id;
     }
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (!(o instanceof InternalCodelist that)) {
-            return false;
-        }
-
-        return id.equals(that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return id.hashCode();
-    }
 }

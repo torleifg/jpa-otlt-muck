@@ -15,11 +15,11 @@ public class Work {
 
     @ManyToMany
     @JoinTable(name = "work_intellectual_level_xref")
-    private Set<IntellectualLevel> intellectualLevel = new HashSet<>();
+    private final Set<IntellectualLevel> intellectualLevel = new HashSet<>();
 
     @ManyToMany
     @JoinTable(name = "work_literature_type_xref")
-    private Set<LiteratureType> literatureType = new HashSet<>();
+    private final Set<LiteratureType> literatureType = new HashSet<>();
 
     public Long getId() {
         return id;

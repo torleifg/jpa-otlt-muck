@@ -15,7 +15,7 @@ public class Expression {
 
     @ManyToMany
     @JoinTable(name = "expression_product_content_type_xref")
-    private Set<ProductContentType> productContentType = new HashSet<>();
+    private final Set<ProductContentType> productContentType = new HashSet<>();
 
     public Long getId() {
         return id;

@@ -4,11 +4,14 @@ import com.github.torleifg.otlt.codelist.internal.IntellectualLevel;
 import com.github.torleifg.otlt.codelist.internal.InternalCodelist;
 import com.github.torleifg.otlt.codelist.internal.InternalCodelistRepository;
 import com.github.torleifg.otlt.codelist.internal.LiteratureType;
+import com.github.torleifg.otlt.work.Work;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,18 +27,16 @@ public class InternalCodelistRepositoryIT extends AbstractIntegrationTest {
 
     @Test
     void customFindAllIntellectualLevelsQueryTest() {
-        testEntityManager.persistAndFlush(IntellectualLevel.of(1));
-        testEntityManager.clear();
+        repository.saveAll(List.of(IntellectualLevel.of(1), IntellectualLevel.of(2)));
 
         final var intellectualLevels = repository.findIntellectualLevels();
 
-        assertEquals(1, intellectualLevels.size());
+        assertEquals(2, intellectualLevels.size());
     }
 
     @Test
     void customFindOneIntellectualLevelQueryTest() {
-        testEntityManager.persistAndFlush(IntellectualLevel.of(1));
-        testEntityManager.clear();
+        repository.save(IntellectualLevel.of(1));
 
         final var intellectualLevel = repository.findIntellectualLevelByCode(1);
 
@@ -44,21 +45,33 @@ public class InternalCodelistRepositoryIT extends AbstractIntegrationTest {
 
     @Test
     void customFindAllLiteratureTypesQueryTest() {
-        testEntityManager.persistAndFlush(LiteratureType.of(1));
-        testEntityManager.clear();
+        repository.saveAll(List.of(LiteratureType.of(1), LiteratureType.of(2)));
 
         final var literatureTypes = repository.findLiteratureTypes();
 
-        assertEquals(1, literatureTypes.size());
+        assertEquals(2, literatureTypes.size());
     }
 
     @Test
     void customFindOneLiteratureTypeQueryTest() {
-        testEntityManager.persistAndFlush(LiteratureType.of(1));
-        testEntityManager.clear();
+        repository.save(LiteratureType.of(1));
 
         final var literatureType = repository.findLiteratureTypeByCode(1);
 
         assertTrue(literatureType.isPresent());
+    }
+
+    @Test
+    void customFindOneLiteratureTypeWithWorkTest() {
+        final var literatureType = repository.save(LiteratureType.of(1));
+
+        final var work = new Work();
+        work.addLiteratureType(literatureType);
+        testEntityManager.persistAndFlush(work);
+
+        final var optionalLiteratureType = repository.findLiteratureTypeByCode(1);
+
+        assertTrue(optionalLiteratureType.isPresent());
+        assertEquals(1, optionalLiteratureType.get().getWork().size());
     }
 }

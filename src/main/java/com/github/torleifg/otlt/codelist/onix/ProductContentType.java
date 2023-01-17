@@ -13,7 +13,7 @@ import java.util.Set;
 public class ProductContentType extends OnixCodelist {
 
     @ManyToMany(mappedBy = "productContentType")
-    private Set<Expression> expression = new HashSet<>();
+    private final Set<Expression> expression = new HashSet<>();
 
     protected ProductContentType() {
     }

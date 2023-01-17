@@ -27,35 +27,38 @@ class WorkRepositoryIT extends AbstractIntegrationTest {
 
     @Test
     void addIntellectualLevelToWorkTest() {
-        testEntityManager.persistAndFlush(IntellectualLevel.of(1));
-        testEntityManager.clear();
+        final var intellectualLevel = testEntityManager.persist(IntellectualLevel.of(1));
 
         final var work = new Work();
-        work.addIntellectualLevel(IntellectualLevel.of(1));
-        final var workWithIntellectualLevel = repostitory.saveAndFlush(work);
+        work.addIntellectualLevel(intellectualLevel);
+        repostitory.save(work);
 
-        assertEquals(1, workWithIntellectualLevel.getIntellectualLevel().size());
+        final var optionalWork = repostitory.findById(work.getId());
+        assertTrue(optionalWork.isPresent());
+
+        testEntityManager.flush();
+
+        assertEquals(1, optionalWork.get().getIntellectualLevel().size());
     }
 
     @Test
     void addAndRemoveLiteratureTypeFromWorkTest() {
-        testEntityManager.persist(LiteratureType.of(1));
+        final var firstLiteratureType = testEntityManager.persist(LiteratureType.of(1));
+        final var secondLiteratureType = testEntityManager.persist(LiteratureType.of(2));
 
         final var work = new Work();
-        work.addLiteratureType(LiteratureType.of(1));
-        final var id = testEntityManager.persistAndGetId(work, Long.class);
+        work.addLiteratureType(firstLiteratureType);
+        work.addLiteratureType(secondLiteratureType);
+        repostitory.save(work);
+
+        work.removeLiteratureType(firstLiteratureType);
+
+        final var modifiedWork = repostitory.findById(work.getId());
+        assertTrue(modifiedWork.isPresent());
 
         testEntityManager.flush();
-        testEntityManager.clear();
 
-        final var workByIdOptional = repostitory.findById(id);
-        assertTrue(workByIdOptional.isPresent());
-
-        final var workById = workByIdOptional.get();
-        workById.removeLiteratureType(LiteratureType.of(1));
-        repostitory.saveAndFlush(workById);
-
-        assertEquals(0, workById.getLiteratureType().size());
+        assertEquals(1, modifiedWork.get().getLiteratureType().size());
     }
 
     @Test

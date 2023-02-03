@@ -12,5 +12,4 @@
     <logger name="org.testcontainers" level="INFO"/>
     <logger name="com.github.dockerjava" level="WARN"/>
     <logger name="org.hibernate.type.descriptor.sql" level="TRACE"/>
-    <logger name="org.springframework.transaction.interceptor" level="TRACE"/>
 </configuration>

@@ -23,28 +23,24 @@ class WorkRepositoryIT extends AbstractIntegrationTest {
     private WorkRepostitory repostitory;
 
     @Autowired
-    private TestEntityManager testEntityManager;
+    private TestEntityManager entityManager;
 
     @Test
     void addIntellectualLevelToWorkTest() {
-        final var intellectualLevel = testEntityManager.persist(IntellectualLevel.of(1));
+        final var intellectualLevel = entityManager.persist(IntellectualLevel.of(1));
 
         final var work = new Work();
         work.addIntellectualLevel(intellectualLevel);
         repostitory.save(work);
 
-        final var optionalWork = repostitory.findById(work.getId());
-        assertTrue(optionalWork.isPresent());
-
-        testEntityManager.flush();
-
-        assertEquals(1, optionalWork.get().getIntellectualLevel().size());
+        assertEquals(work, entityManager.find(Work.class, work.getId()));
+        assertEquals(1, entityManager.find(Work.class, work.getId()).getIntellectualLevel().size());
     }
 
     @Test
     void addAndRemoveLiteratureTypeFromWorkTest() {
-        final var firstLiteratureType = testEntityManager.persist(LiteratureType.of(1));
-        final var secondLiteratureType = testEntityManager.persist(LiteratureType.of(2));
+        final var firstLiteratureType = entityManager.persist(LiteratureType.of(1));
+        final var secondLiteratureType = entityManager.persist(LiteratureType.of(2));
 
         final var work = new Work();
         work.addLiteratureType(firstLiteratureType);
@@ -53,12 +49,8 @@ class WorkRepositoryIT extends AbstractIntegrationTest {
 
         work.removeLiteratureType(firstLiteratureType);
 
-        final var modifiedWork = repostitory.findById(work.getId());
-        assertTrue(modifiedWork.isPresent());
-
-        testEntityManager.flush();
-
-        assertEquals(1, modifiedWork.get().getLiteratureType().size());
+        assertEquals(work, entityManager.find(Work.class, work.getId()));
+        assertEquals(1, entityManager.find(Work.class, work.getId()).getLiteratureType().size());
     }
 
     @Test

@@ -11,8 +11,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
@@ -23,11 +21,12 @@ public class InternalCodelistRepositoryIT extends AbstractIntegrationTest {
     private InternalCodelistRepository<? super InternalCodelist> repository;
 
     @Autowired
-    private TestEntityManager testEntityManager;
+    private TestEntityManager entityManager;
 
     @Test
     void customFindAllIntellectualLevelsQueryTest() {
-        repository.saveAll(List.of(IntellectualLevel.of(1), IntellectualLevel.of(2)));
+        entityManager.persist(IntellectualLevel.of(1));
+        entityManager.persist(IntellectualLevel.of(2));
 
         final var intellectualLevels = repository.findIntellectualLevels();
 
@@ -36,7 +35,7 @@ public class InternalCodelistRepositoryIT extends AbstractIntegrationTest {
 
     @Test
     void customFindOneIntellectualLevelQueryTest() {
-        repository.save(IntellectualLevel.of(1));
+        entityManager.persist(IntellectualLevel.of(1));
 
         final var intellectualLevel = repository.findIntellectualLevelByCode(1);
 
@@ -45,7 +44,8 @@ public class InternalCodelistRepositoryIT extends AbstractIntegrationTest {
 
     @Test
     void customFindAllLiteratureTypesQueryTest() {
-        repository.saveAll(List.of(LiteratureType.of(1), LiteratureType.of(2)));
+        entityManager.persist(LiteratureType.of(1));
+        entityManager.persist(LiteratureType.of(2));
 
         final var literatureTypes = repository.findLiteratureTypes();
 
@@ -54,7 +54,7 @@ public class InternalCodelistRepositoryIT extends AbstractIntegrationTest {
 
     @Test
     void customFindOneLiteratureTypeQueryTest() {
-        repository.save(LiteratureType.of(1));
+        entityManager.persist(LiteratureType.of(1));
 
         final var literatureType = repository.findLiteratureTypeByCode(1);
 
@@ -63,11 +63,11 @@ public class InternalCodelistRepositoryIT extends AbstractIntegrationTest {
 
     @Test
     void customFindOneLiteratureTypeWithWorkTest() {
-        final var literatureType = repository.save(LiteratureType.of(1));
+        final var literatureType = entityManager.persist(LiteratureType.of(1));
 
         final var work = new Work();
         work.addLiteratureType(literatureType);
-        testEntityManager.persistAndFlush(work);
+        entityManager.persist(work);
 
         final var optionalLiteratureType = repository.findLiteratureTypeByCode(1);
 

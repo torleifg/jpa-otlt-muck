@@ -74,4 +74,38 @@ public class InternalCodelistRepositoryIT extends AbstractIntegrationTest {
         assertTrue(optionalLiteratureType.isPresent());
         assertEquals(1, optionalLiteratureType.get().getWork().size());
     }
+
+    @Test
+    void cacheFindAllIntellectualLevelsQueryTest() {
+        entityManager.persist(IntellectualLevel.of(1));
+        entityManager.persist(IntellectualLevel.of(2));
+
+        repository.findIntellectualLevels();
+        repository.findIntellectualLevels();
+    }
+
+    @Test
+    void cacheFindOneIntellectualLevelQueryTest() {
+        entityManager.persist(IntellectualLevel.of(1));
+
+        repository.findIntellectualLevelByCode(1);
+        repository.findIntellectualLevelByCode(1);
+    }
+
+    @Test
+    void cacheFindAllLiteratureTypesQueryTest() {
+        entityManager.persist(LiteratureType.of(1));
+        entityManager.persist(LiteratureType.of(2));
+
+        repository.findLiteratureTypes();
+        repository.findLiteratureTypes();
+    }
+
+    @Test
+    void cacheFindOneLiteratureTypeQueryTest() {
+        entityManager.persist(LiteratureType.of(1));
+
+        repository.findLiteratureTypeByCode(1);
+        repository.findLiteratureTypeByCode(1);
+    }
 }

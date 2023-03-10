@@ -1,5 +1,4 @@
 spring:
-
   jpa:
     hibernate:
       ddl-auto: validate
@@ -9,12 +8,16 @@ spring:
           use_second_level_cache: true
           use_query_cache: true
           region:
-            factory_class: org.hibernate.cache.jcache.JCacheRegionFactory
+            factory_class: jcache
+        javax:
+          cache:
+            provider: org.ehcache.jsr107.EhcacheCachingProvider
+            #uri: classpath:ehcache.xml
         generate_statistics: true
         format_sql: true
         session:
           events:
             log:
-              LOG_QUERIES_SLOWER_THAN_MS: 20
+              LOG_QUERIES_SLOWER_THAN_MS: 10
   flyway:
     enabled: true

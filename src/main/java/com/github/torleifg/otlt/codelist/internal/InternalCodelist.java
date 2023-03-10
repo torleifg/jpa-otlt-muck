@@ -2,13 +2,14 @@ package com.github.torleifg.otlt.codelist.internal;
 
 import com.github.torleifg.otlt.codelist.CodelistId;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Cache;
 
 import javax.persistence.*;
 
 @Entity
 @DiscriminatorColumn
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public abstract class InternalCodelist {
 
     @EmbeddedId

@@ -1,0 +1,30 @@
+<config
+        xmlns='http://www.ehcache.org/v3'
+        xmlns:jsr107='http://www.ehcache.org/v3/jsr107'>
+
+    <service>
+        <jsr107:defaults default-template="myDefault">
+        </jsr107:defaults>
+    </service>
+
+    <cache alias="default-query-results-region">
+        <expiry>
+            <none/>
+        </expiry>
+        <heap>1000</heap>
+    </cache>
+
+    <cache alias="default-update-timestamps-region">
+        <expiry>
+            <none/>
+        </expiry>
+        <heap>1000</heap>
+    </cache>
+
+    <cache-template name="myDefault">
+        <expiry>
+            <none/>
+        </expiry>
+        <heap>1000</heap>
+    </cache-template>
+</config>

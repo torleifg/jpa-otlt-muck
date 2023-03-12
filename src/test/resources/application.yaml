@@ -12,8 +12,8 @@ spring:
         javax:
           cache:
             provider: org.ehcache.jsr107.EhcacheCachingProvider
-            #uri: classpath:ehcache.xml
-        generate_statistics: true
+            uri: ehcache.xml
+        generate_statistics: false
         format_sql: true
         session:
           events:
